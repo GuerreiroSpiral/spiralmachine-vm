@@ -52,14 +52,14 @@ class SpiralAssembler():
         _header = [0x1, 0x2, 0x3, 0x4]
         self._write_binary(_header)
     
-    def _parse_labels(i):
+    def _parse_labels(self, i):
         _value = hex(i*4+self.P_MEMORY_START)
         _mem_location = self.split(_value)
-            if len(_mem_location) < 6:
-                _mem_location.insert(2, '0')
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 16)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 16)
-            self._write_binary([_mem_location[0], _mem_location[1]])
+        if len(_mem_location) < 6:
+            _mem_location.insert(2, '0')
+            _mem_location[0] = int(_mem_location[2] + _mem_location[3], 16)
+            _mem_location[1] = int(_mem_location[4] + _mem_location[5], 16)
+        self._write_binary([_mem_location[0], _mem_location[1]])
 
     def _parse_assembly(self, file):
         i = 0
