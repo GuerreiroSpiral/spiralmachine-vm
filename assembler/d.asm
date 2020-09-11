@@ -1,7 +1,5 @@
-BLT 0x8000
+BLT 0x0223
 DEY
 .loop
 LXY 
 JTL .loop
-.jorge
-JTL .jpg

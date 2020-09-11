@@ -51,7 +51,7 @@ class SpiralAssembler():
         return location <= limit and location >= start
 
     def _add_header(self):
-        _header = [0x1, 0x2, 0x3, 0x4]
+        _header = [0xAA, 0xFF, 0xCC, 0x55]
         self._write_binary(_header)
     
     def _parse_labels(self, i, _line):
@@ -62,6 +62,12 @@ class SpiralAssembler():
             _mem_location[0] = int(_mem_location[2] + _mem_location[3], 16)
             _mem_location[1] = int(_mem_location[4] + _mem_location[5], 16)
         self.symbol_table[_line] = _mem_location
+    
+    def _separate_bytes(self, _mem_location):
+        _mem_location[0] = int(_mem_location[2] + _mem_location[3], 16)
+        _mem_location[1] = int(_mem_location[4] + _mem_location[5], 16)
+        return _mem_location
+
 
     def _parse_assembly(self, file):
         i = 0
@@ -69,10 +75,9 @@ class SpiralAssembler():
             if _line.startswith('.'):
                 self._parse_labels(i, _line)
                 continue
+            i += 1
             if _line == '':
                 continue
-
-            i += 1
 
             _original_line = str(_line)
             _line = _line.replace(',', '')
@@ -83,12 +88,11 @@ class SpiralAssembler():
 
             if _final_line[0].upper() == 'LDI':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
+                    raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _value = int(_final_line[2], 0)
                 _b = [0x00, _mem_location[0], _mem_location[1], _value]
-                if not self._is_memory_location_valid(_mem_location + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
-                    raise MemoryAccessError(line=_original_line)
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'LDX':
@@ -106,19 +110,17 @@ class SpiralAssembler():
 
             elif _final_line[0].upper() == 'LMX':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid(_mem_location + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
                     raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x0A, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'LMY':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid(_mem_location + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
                     raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x0B, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
@@ -134,19 +136,17 @@ class SpiralAssembler():
 
             elif _final_line[0].upper() == 'JSR':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid(_mem_location + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
                     raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x05, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'JMP':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid(_mem_location + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
                     raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x06, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
@@ -199,19 +199,17 @@ class SpiralAssembler():
 
             elif _final_line[0].upper() == 'LEX':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid(_mem_location + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
                     raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x0F, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'LEY':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid(_mem_location + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
                     raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x10, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
@@ -229,65 +227,58 @@ class SpiralAssembler():
 
             elif _final_line[0].upper() == 'BEQ':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid(_mem_location + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
                     raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x18, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'BXG':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid(_mem_location + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
                     raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x19, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'BYG':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid(_mem_location + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
                     raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x1A, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'BLT':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid((_mem_location[0] + _mem_location[1]) + self.VRAM_START, self.VRAM_START, self.VRAM_END):
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.VRAM_START, self.VRAM_START, self.VRAM_END):
                     raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x1B, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'VRI':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.VRAM_START, self.VRAM_START, self.VRAM_END):
+                    raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _value = int(_final_line[2], 0)
                 _b = [0x1E, _mem_location[0], _mem_location[1], _value]
-                if not self._is_memory_location_valid((_mem_location[0] + _mem_location[1]) + self.VRAM_START, self.VRAM_START, self.VRAM_END):
-                    raise MemoryAccessError(line=_original_line)
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'VRX':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid((_mem_location[0] + _mem_location[1]) + self.VRAM_START, self.VRAM_START, self.VRAM_END):
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.VRAM_START, self.VRAM_START, self.VRAM_END):
                     raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x1F, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'VRY':
                 _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid((_mem_location[0] + _mem_location[1]) + self.VRAM_START, self.VRAM_START, self.VRAM_END):
+                if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.VRAM_START, self.VRAM_START, self.VRAM_END):
                     raise MemoryAccessError(line=_original_line)
+                _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x20, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
