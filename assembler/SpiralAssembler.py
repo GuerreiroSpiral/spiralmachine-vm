@@ -5,6 +5,7 @@
 #----------------------------------------------------------------#
 
 import argparse
+import logging
 from exceptions import *
 
 
@@ -26,6 +27,7 @@ class SpiralAssembler():
         self.P_MEMORY_END = 0x2000
         # H E A D E R V A L I D
         self.HEADER = 'SPMF'
+        self.symbol_table = dict()
 
     def split(self, word):
         return [char for char in word]
@@ -52,20 +54,20 @@ class SpiralAssembler():
         _header = [0x1, 0x2, 0x3, 0x4]
         self._write_binary(_header)
     
-    def _parse_labels(self, i):
-        _value = hex(i*4+self.P_MEMORY_START)
+    def _parse_labels(self, i, _line):
+        _value = hex(i*4+self.P_MEMORY_START+1)
         _mem_location = self.split(_value)
         if len(_mem_location) < 6:
             _mem_location.insert(2, '0')
             _mem_location[0] = int(_mem_location[2] + _mem_location[3], 16)
             _mem_location[1] = int(_mem_location[4] + _mem_location[5], 16)
-        self._write_binary([_mem_location[0], _mem_location[1]])
+        self.symbol_table[_line] = _mem_location
 
     def _parse_assembly(self, file):
         i = 0
         for _line in file:
             if _line.startswith('.'):
-                self._parse_labels(i)
+                self._parse_labels(i, _line)
                 continue
             if _line == '':
                 continue
@@ -149,11 +151,12 @@ class SpiralAssembler():
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'JTL':
-                _mem_location = self.split(_final_line[1])
-                _mem_location[0] = int(_mem_location[2] + _mem_location[3], 0)
-                _mem_location[1] = int(_mem_location[4] + _mem_location[5], 0)
-                if not self._is_memory_location_valid(_mem_location + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
-                    raise MemoryAccessError(line=_original_line)
+                _label = _final_line[1]
+                try:
+                    _mem_location = self.symbol_table[_label]
+                except KeyError:
+                    logging.error("\"" + _label + "\" label not defined before usage.")
+                    return
                 _b = [0x16, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
