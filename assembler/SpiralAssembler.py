@@ -55,7 +55,7 @@ class SpiralAssembler():
         self._write_binary(_header)
     
     def _parse_labels(self, i, _line):
-        _value = hex(i*4+self.P_MEMORY_START+1)
+        _value = hex(i*4+self.P_MEMORY_START)
         _mem_location = self.split(_value)
         if len(_mem_location) < 6:
             _mem_location.insert(2, '0')
