@@ -124,16 +124,6 @@ class SpiralAssembler():
                 _b = [0x0B, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
 
-            elif _final_line[0].upper() == 'LXM':
-                _value = int(_final_line[1], 0)
-                _b = [0x14, _value, 0, 0]
-                self._write_binary(_b)
-
-            elif _final_line[0].upper() == 'LYM':
-                _value = int(_final_line[1], 0)
-                _b = [0x15, _value, 0, 0]
-                self._write_binary(_b)
-
             elif _final_line[0].upper() == 'JSR':
                 _mem_location = self.split(_final_line[1])
                 if not self._is_memory_location_valid(int(_mem_location[2] + _mem_location[3] + _mem_location[4] + _mem_location[5], 16) + self.P_MEMORY_START, self.P_MEMORY_START, self.P_MEMORY_END):
@@ -280,6 +270,22 @@ class SpiralAssembler():
                     raise MemoryAccessError(line=_original_line)
                 _mem_location = self._separate_bytes(_mem_location)
                 _b = [0x20, _mem_location[0], _mem_location[1], 0]
+                self._write_binary(_b)
+            
+            elif _final_line[0].upper() == 'PXA':
+                _b = [0x21, 0, 0, 0]
+                self._write_binary(_b)
+            
+            elif _final_line[0].upper() == 'PYA':
+                _b = [0x22, 0, 0, 0]
+                self._write_binary(_b)
+            
+            elif _final_line[0].upper() == 'LTX':
+                _b = [0x23, 0, 0, 0]
+                self._write_binary(_b)
+            
+            elif _final_line[0].upper() == 'LTY':
+                _b = [0x24, 0, 0, 0]
                 self._write_binary(_b)
 
             else:

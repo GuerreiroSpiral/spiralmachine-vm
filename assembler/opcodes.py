@@ -2,8 +2,6 @@ OPCODE_DICTIONARY = {
     'LDI': 0x00,
     'LDX': 0x01,
     'LDY': 0x02,
-    'LXY': 0x03,
-    'LYX': 0x04,
     'LMX': 0x0A,
     'LMY': 0x0B,
     'LXM': 0x14,
