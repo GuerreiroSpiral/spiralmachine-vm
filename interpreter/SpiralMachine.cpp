@@ -163,7 +163,7 @@ void SpiralMachine::BXG(uint16_t mem_location){
 void SpiralMachine::BYG(uint16_t mem_location){
     if (flags[YG]){
         sixteen_b_registers[PC] = mem_location;
-        sixteen_b_registers[PC] = (memory[sixteen_b_registers[SP]] << 8) | (memory[sixteen_b_registers[SP] + 1] >> 8);
+        sixteen_b_registers[PC] = (memory[sixteen_b_registers[SP]] << 8) | (memory[sixteen_b_registers[SP] + 1]);
         pop();
         pop();
     }
