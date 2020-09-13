@@ -1,6 +1,10 @@
 #include <stdint.h>
 #include "SpiralMachine.h"
 
+uint16_t SpiralMachine::fetch_instruction(){
+    return memory[sixteen_b_registers[PC]];
+}
+
 void SpiralMachine::pop(){
     sixteen_b_registers[SP]++;
 }
@@ -43,7 +47,7 @@ void SpiralMachine::LMY(uint16_t mem_location){
 
 void SpiralMachine::JSR(uint16_t mem_location){
     push(sixteen_b_registers[PC] >> 8);
-    push(sixteen_b_registers[PC] << 8);
+    push((sixteen_b_registers[PC] << 8) >> 8);
     sixteen_b_registers[PC] = mem_location;
 }
 
@@ -73,7 +77,7 @@ void SpiralMachine::POP(){
 }
 
 void SpiralMachine::PPC(){
-    sixteen_b_registers[PC] = (memory[sixteen_b_registers[SP]] << 8) | (memory[sixteen_b_registers[SP] + 1] >> 8);
+    sixteen_b_registers[PC] = (memory[sixteen_b_registers[SP]] << 8) | (memory[sixteen_b_registers[SP] + 1]);
     pop();
     pop();
 }
@@ -141,23 +145,23 @@ void SpiralMachine::CMP(){
 void SpiralMachine::BEQ(uint16_t mem_location){
     if (flags[E] == 0){
         sixteen_b_registers[PC] = mem_location;
-        sixteen_b_registers[PC] = (memory[sixteen_b_registers[SP]] << 8) | (memory[sixteen_b_registers[SP] + 1] >> 8);
+        sixteen_b_registers[PC] = (memory[sixteen_b_registers[SP]] << 8) | (memory[sixteen_b_registers[SP] + 1]);
         pop();
         pop();
     }
 }
 
 void SpiralMachine::BXG(uint16_t mem_location){
-    if (flags[XG] == 0){
+    if (flags[XG]){
         sixteen_b_registers[PC] = mem_location;
-        sixteen_b_registers[PC] = (memory[sixteen_b_registers[SP]] << 8) | (memory[sixteen_b_registers[SP] + 1] >> 8);
+        sixteen_b_registers[PC] = (memory[sixteen_b_registers[SP]] << 8) | (memory[sixteen_b_registers[SP] + 1]);
         pop();
         pop();
     }
 }
 
 void SpiralMachine::BYG(uint16_t mem_location){
-    if (flags[YG] == 0){
+    if (flags[YG]){
         sixteen_b_registers[PC] = mem_location;
         sixteen_b_registers[PC] = (memory[sixteen_b_registers[SP]] << 8) | (memory[sixteen_b_registers[SP] + 1] >> 8);
         pop();

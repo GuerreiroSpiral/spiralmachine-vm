@@ -46,6 +46,8 @@ class SpiralMachine{
     uint16_t sixteen_b_registers[SIXTEEN_B_REGISTERS];
 
     void set_flag(Flags flag, bool value);
+    void fde_cycle();
+    uint16_t fetch_instruction();
 
     // Stack operations
     void pop();
