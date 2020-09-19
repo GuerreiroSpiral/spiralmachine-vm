@@ -51,7 +51,7 @@ For instructions that use Immediate Memory Values, target is calculated based on
 
 **Example:**
 
-=> LDI 0x2, 0x3
+=> LDI 0x0002, 0x0003
 
 The immediate value **0x3** would be loaded into memory address **0x0C6 + 0x2**.  
 
