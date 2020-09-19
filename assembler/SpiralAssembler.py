@@ -100,11 +100,15 @@ class SpiralAssembler():
                 _b = [0x01, _value, 0, 0]
                 self._write_binary(_b)
 
-            elif _final_line[0].upper() == 'LXY':
-                _b = [0x03, 0, 0, 0]
+            elif _final_line[0].upper() == 'LDY':
+                _b = [0x02, 0, 0, 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'LXY':
+                _b = [0x03, 0, 0, 0]
+                self._write_binary(_b)
+            
+            elif _final_line[0].upper() == 'LYX':
                 _b = [0x04, 0, 0, 0]
                 self._write_binary(_b)
 
@@ -151,15 +155,23 @@ class SpiralAssembler():
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'PCS':
-                _b = [0x03, 0, 0, 0]
+                _b = [0x1D, 0, 0, 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'PHA':
                 _value = int(_final_line[1], 0)
                 _b = [0x07, _value, 0, 0]
                 self._write_binary(_b)
+            
+            elif _final_line[0].upper() == 'PYA':
+                _b = [0x22, 0, 0, 0]
+                self._write_binary(_b)
+            
+            elif _final_line[0].upper() == 'PXA':
+                _b = [0x21, 0, 0, 0]
+                self._write_binary(_b)
 
-            elif _final_line[0].upper() == 'PCS':
+            elif _final_line[0].upper() == 'POP':
                 _b = [0x08, 0, 0, 0]
                 self._write_binary(_b)
 
@@ -168,23 +180,23 @@ class SpiralAssembler():
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'PTM':
-                _b = [0x21, 0, 0, 0]
+                _b = [0x23, 0, 0, 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'INX':
-                _b = [0x21, 0, 0, 0]
+                _b = [0x09, 0, 0, 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'INY':
-                _b = [0x21, 0, 0, 0]
+                _b = [0x0C, 0, 0, 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'DEX':
-                _b = [0x21, 0, 0, 0]
+                _b = [0x0D, 0, 0, 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'DEY':
-                _b = [0x21, 0, 0, 0]
+                _b = [0x0E, 0, 0, 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'LEX':
@@ -209,6 +221,10 @@ class SpiralAssembler():
 
             elif _final_line[0].upper() == 'SXY':
                 _b = [0x12, 0, 0, 0]
+                self._write_binary(_b)
+            
+            elif _final_line[0].upper() == 'SYX':
+                _b = [0x13, 0, 0, 0]
                 self._write_binary(_b)
 
             elif _final_line[0].upper() == 'CMP':
@@ -272,16 +288,8 @@ class SpiralAssembler():
                 _b = [0x20, _mem_location[0], _mem_location[1], 0]
                 self._write_binary(_b)
             
-            elif _final_line[0].upper() == 'PXA':
-                _b = [0x21, 0, 0, 0]
-                self._write_binary(_b)
-            
-            elif _final_line[0].upper() == 'PYA':
-                _b = [0x22, 0, 0, 0]
-                self._write_binary(_b)
-            
             elif _final_line[0].upper() == 'LTX':
-                _b = [0x23, 0, 0, 0]
+                _b = [0x25, 0, 0, 0]
                 self._write_binary(_b)
             
             elif _final_line[0].upper() == 'LTY':

@@ -47,7 +47,7 @@ void SpiralMachine::LMY(uint16_t mem_location){
 
 void SpiralMachine::JSR(uint16_t mem_location){
     push(sixteen_b_registers[PC] >> 8);
-    push((sixteen_b_registers[PC] << 8) >> 8);
+    push(sixteen_b_registers[PC] << 8);
     sixteen_b_registers[PC] = mem_location;
 }
 
@@ -194,4 +194,167 @@ void SpiralMachine::LTX(){
 
 void SpiralMachine::LTY(){
     eight_b_registers[Y] = eight_b_registers[T];
+}
+
+void SpiralMachine::fde_cycle(){
+
+    uint16_t pc_value = sixteen_b_registers[PC];
+    uint8_t first_operand = memory[sixteen_b_registers[pc_value+1]];  // Higher byte
+    uint8_t second_operand = memory[sixteen_b_registers[pc_value+2]]; // Lower byte
+    uint8_t third_operand = memory[sixteen_b_registers[pc_value+3]];  // Only used for LDI and VRI instructions
+
+    switch(memory[sixteen_b_registers[PC]]){
+        case 0x00: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            LDI(mem_location, third_operand);
+        }
+        case 0x01: {
+            LDX(first_operand);
+        }
+        case 0x02: {
+            LDY(first_operand);
+        }
+        case 0x03: {
+            LXY();
+        }
+        case 0x04: {
+            LYX();
+        }
+        case 0x0A: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            LMX(mem_location);
+        }
+        case 0x0B: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            LMY(mem_location);
+        }
+        case 0x05: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            JSR(mem_location);
+        }
+        case 0x06: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            JMP(mem_location);
+        }
+
+        case 0x16: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            JTL(mem_location);
+        }
+
+        case 0x1D: {
+            PCS();
+        }
+
+        case 0x07: {
+            PHA(first_operand);
+        }
+
+        case 0x21: {
+            PXA();
+        }
+
+        case 0x22: {
+            PYA();
+        }
+
+        case 0x08: {
+            POP();
+        }
+
+        case 0x1C: {
+            PPC();
+        }
+
+        case 0x23: {
+            PTM();
+        }
+
+        case 0x09: {
+            INX();
+        }
+
+        case 0x0C: {
+            INY();
+        }
+
+        case 0x0D: {
+            DEX();
+        }
+
+        case 0x0E: {
+            DEY();
+        }
+
+        case 0x0F: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            LEX(mem_location);
+        }
+
+        case 0x10: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            LEY(mem_location);
+        }
+
+        case 0x11: {
+            AXY();
+        }
+
+        case 0x12: {
+            SXY();
+        }
+
+        case 0x13: {
+            SYX();
+        }
+
+        case 0x17: {
+            CMP();
+        }
+
+        case 0x18: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            BEQ(mem_location);
+        }
+
+        case 0x19: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            BXG(mem_location);
+        }
+
+        case 0x1A: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            BYG(mem_location);
+        }
+
+        case 0x1B: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            BLT(mem_location);
+        }
+
+        case 0x1E: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            VRI(mem_location, third_operand);
+        }
+
+        case 0x1F: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            VRX(mem_location);
+        }
+
+        case 0x20: {
+            uint16_t mem_location = (first_operand << 8) | second_operand;
+            VRY(mem_location);
+        }
+
+        case 0x25: {
+            LTX();
+        }
+
+        case 0x24: {
+            LTY();
+        }
+
+    }
+    sixteen_b_registers[PC] += 4; // Instructions are 4-bytes long
 }
