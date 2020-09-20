@@ -235,7 +235,7 @@ void SpiralMachine::BYG(uint16_t mem_location){
 }
 
 void SpiralMachine::BLT(uint16_t mem_location){
-    // To be implemented
+    screen.blit_screen(memory[mem_location], mem_location);
 }
 
 void SpiralMachine::VRI(uint16_t mem_location, uint8_t value){

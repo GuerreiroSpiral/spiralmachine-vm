@@ -20,8 +20,7 @@ class SpiralScreen{
         SpiralScreen();
         ~SpiralScreen();
         void render_screen(uint8_t memory[]);
-    private:
-        void blit_screen (uint8_t color, uint16_t VRAM_LOCATION);
+         void blit_screen (uint8_t color, uint16_t VRAM_LOCATION);
 };
 
 #endif // SPIRAL_SCREEN_H
