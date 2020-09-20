@@ -53,7 +53,7 @@ For instructions that use Immediate Memory Values, target is calculated based on
 
 => LDI 0x0002, 0x0003
 
-The immediate value **0x3** would be loaded into memory address **0x0C6 + 0x2**.  
+The immediate value **0x3** would be loaded into memory address **0x0C6 + 0x2**.  **This is implemented in the interpreter, not in the Assembler.**
 
 ## Instruction Table
 Instruction | Mnemonic | OPCode | Description
