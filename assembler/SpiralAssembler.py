@@ -32,7 +32,7 @@ class SpiralAssembler():
     def split(self, word):
         return [char for char in word]
 
-    def _assemble(self, file_path="D:\SpiralMachine\\assembler\d.asm"):
+    def _assemble(self, file_path="D:\SpiralMachine\\assembler\colors.asm"):
         _instr = list()
 
         with open(file_path, "r") as asm_file:

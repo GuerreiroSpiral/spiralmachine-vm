@@ -2,6 +2,7 @@
 #define SPIRAL_MACHINE_H
 
 #include <stdint.h>
+#include "SpiralScreen.h"
 
 #define MEMORY_SIZE 0x10000
 #define STACK_SIZE 0x4000
@@ -42,14 +43,18 @@ class SpiralMachine{
 
     public: 
         void load_rom();
+        void init();
     private:
         bool flags[FLAGS];
         uint8_t memory[MEMORY_SIZE];
         uint8_t eight_b_registers[EIGHT_B_REGISTERS];
         uint16_t sixteen_b_registers[SIXTEEN_B_REGISTERS];
+        SpiralScreen screen = SpiralScreen();
 
         void set_flag(Flags flag, bool value);
         void fde_cycle();
+        void step();
+        void clear_memory();
         uint16_t fetch_instruction();
 
         // Stack operations
