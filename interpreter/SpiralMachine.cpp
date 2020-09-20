@@ -1,5 +1,7 @@
 #include <stdint.h>
 #include "SpiralMachine.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 uint16_t SpiralMachine::fetch_instruction(){
     return memory[sixteen_b_registers[PC]];
@@ -62,6 +64,10 @@ void SpiralMachine::JTL(uint16_t mem_location){
 void SpiralMachine::PCS(){
     push(sixteen_b_registers[PC] >> 8);
     push(sixteen_b_registers[PC] << 8);
+}
+
+void SpiralMachine::PHA(uint8_t value){
+    push(value);
 }
 
 void SpiralMachine::PXA(){
@@ -357,4 +363,29 @@ void SpiralMachine::fde_cycle(){
 
     }
     sixteen_b_registers[PC] += 4; // Instructions are 4-bytes long
+}
+
+void SpiralMachine::load_rom(){
+    FILE *fileptr;
+    char *buffer;
+    long filelen;
+
+    fileptr = fopen("rom.spm", "rb");
+    fseek(fileptr, 0, SEEK_END);          
+    filelen = ftell(fileptr);             
+    rewind(fileptr);                      
+
+    buffer = (char *)malloc(filelen * sizeof(char)); 
+    fread(buffer, filelen, 1, fileptr); 
+    fclose(fileptr); 
+
+    // Loads the header into memory
+    for (int i = 0; i <= 4; i++){
+        memory[i] = uint8_t(buffer[i]);
+    }
+
+    // Loads the Program data into memory
+    for (int i = 0; i < filelen; i++){
+        memory[PROGRAM_MEMORY_START + i] = uint8_t(buffer[i] + 4);
+    }
 }

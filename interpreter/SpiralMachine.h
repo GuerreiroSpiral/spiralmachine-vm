@@ -40,65 +40,68 @@ class SpiralMachine{
         FLAGS
     };
 
-    bool flags[FLAGS];
-    uint8_t memory[MEMORY_SIZE];
-    uint8_t eight_b_registers[EIGHT_B_REGISTERS];
-    uint16_t sixteen_b_registers[SIXTEEN_B_REGISTERS];
+    public: 
+        void load_rom();
+    private:
+        bool flags[FLAGS];
+        uint8_t memory[MEMORY_SIZE];
+        uint8_t eight_b_registers[EIGHT_B_REGISTERS];
+        uint16_t sixteen_b_registers[SIXTEEN_B_REGISTERS];
 
-    void set_flag(Flags flag, bool value);
-    void fde_cycle();
-    uint16_t fetch_instruction();
+        void set_flag(Flags flag, bool value);
+        void fde_cycle();
+        uint16_t fetch_instruction();
 
-    // Stack operations
-    void pop();
-    void push(uint8_t value);
+        // Stack operations
+        void pop();
+        void push(uint8_t value);
 
-    // CPU operations
-    void LDI(uint16_t mem_location, uint8_t value);
-    void LDX(uint8_t value);
-    void LDY(uint8_t value);
-    void LXY();
-    void LYX();
-    void LMX(uint16_t mem_location);
-    void LMY(uint16_t mem_location);
+        // CPU operations
+        void LDI(uint16_t mem_location, uint8_t value);
+        void LDX(uint8_t value);
+        void LDY(uint8_t value);
+        void LXY();
+        void LYX();
+        void LMX(uint16_t mem_location);
+        void LMY(uint16_t mem_location);
 
-    void JSR(uint16_t mem_location);
-    void JMP(uint16_t mem_location);
-    void JTL(uint16_t mem_location);
+        void JSR(uint16_t mem_location);
+        void JMP(uint16_t mem_location);
+        void JTL(uint16_t mem_location);
 
-    void PCS();
-    void PHA(uint8_t value);
-    void PXA();
-    void PYA();
-    void POP();
-    void PPC();
-    void PTM();
+        void PCS();
+        void PHA(uint8_t value);
+        void PXA();
+        void PYA();
+        void POP();
+        void PPC();
+        void PTM();
 
-    void INX();
-    void INY();
-    void DEX();
-    void DEY();
+        void INX();
+        void INY();
+        void DEX();
+        void DEY();
 
-    void LEX(uint16_t mem_location);
-    void LEY(uint16_t mem_location);
+        void LEX(uint16_t mem_location);
+        void LEY(uint16_t mem_location);
 
-    void AXY();
-    void SXY();
-    void SYX();
-    void CMP();
+        void AXY();
+        void SXY();
+        void SYX();
+        void CMP();
 
-    void BEQ(uint16_t mem_location);
-    void BXG(uint16_t mem_location);
-    void BYG(uint16_t mem_location);
-    void BLT(uint16_t mem_location);
+        void BEQ(uint16_t mem_location);
+        void BXG(uint16_t mem_location);
+        void BYG(uint16_t mem_location);
+        void BLT(uint16_t mem_location);
 
-    void VRI(uint16_t mem_location, uint8_t value);
+        void VRI(uint16_t mem_location, uint8_t value);
 
-    void VRX(uint16_t mem_location);
-    void VRY(uint16_t mem_location);
+        void VRX(uint16_t mem_location);
+        void VRY(uint16_t mem_location);
 
-    void LTX();
-    void LTY();
+        void LTX();
+        void LTY();
 };
 
 #endif // SPIRAL_MACHINE_H
