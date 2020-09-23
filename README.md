@@ -1,7 +1,7 @@
 # Spiral Machine
 This is a small project I started when I was bored. Spiral Machine is a theoretical 8-bit machine with a simple ISA and limited memory. 
 
-My objective was to design the ISA, make an Assembler and develop an Interpreter as a learning tool, so there's no support for Floating point decimals, overflows/underflows and more advanced stuff.
+My objective was to design the ISA, make an Assembler and develop an Interpreter as a learning tool, so there's no support for floating point decimals, overflows/underflows and more advanced stuff.
 
 # Specifications
 ## Specifications:
