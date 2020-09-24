@@ -65,7 +65,7 @@ LOAD Y TO X | LXY | 0x03 | Loads the value of the Y register to the X register.
 LOAD X TO Y | LYX | 0x04 | Loads the value of the X register to the Y register.
 LOAD X TO (X) | LMX (X) | 0x0A | Loads the value of the X register to memory address (X).
 LOAD Y TO (X) | LMY (X) | 0x0B | Loads the value of the Y register to memory address (X).
-JUMP TO SUBROUTINE (X) | JSR (X) | 0x05 | Jumps to the instruction at memory address (X). The current Program Counter value is pushed onto the stack.
+JUMP TO SUBROUTINE (X) | JSR (X) | 0x05 | Jumps to the instruction at memory address (X). The current Program Counter value is pushed onto the stack.¹
 JUMP TO LOCATION (X) | JMP (X) | 0x06 | Jumps to the instruction at memory address (X).
 JUMP TO LABEL (X) | JTL X | 0x16 | Jumps to the previously defined label X.
 PUSH PC TO STACK | PCS | 0x1D | Pushes the current value of the Program Counter to the stack.
@@ -94,3 +94,4 @@ LOAD TEMP TO X | LTX | 0x25 | Loads the value of the T register into the X regis
 LOAD TEMP TO Y | LTY | 0x24 | Loads the value of the T register into the Y register.
 
 \* = If RR = 0, sets the E flag and clears the other two. If RR < 0, sets the YG flag and clears the other two. If RR > 0, sets the XG flag and clears the other two.
+¹ = The pushed value is the PC += 4, or the address to the NEXT instruction immediately after the JSR instruction

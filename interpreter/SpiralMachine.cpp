@@ -107,6 +107,7 @@ void SpiralMachine::LMY(uint16_t mem_location){
 }
 
 void SpiralMachine::JSR(uint16_t mem_location){
+    sixteen_b_registers[PC] += 4;
     push(sixteen_b_registers[PC] >> 8);
     push((sixteen_b_registers[PC] & 0xFF));
     sixteen_b_registers[PC] = mem_location + PROGRAM_MEMORY_START;
