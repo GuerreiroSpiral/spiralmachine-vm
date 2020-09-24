@@ -95,4 +95,5 @@ LOAD TEMP TO X | LTX | 0x25 | Loads the value of the T register into the X regis
 LOAD TEMP TO Y | LTY | 0x24 | Loads the value of the T register into the Y register.
 
 \* = If RR = 0, sets the E flag and clears the other two. If RR < 0, sets the YG flag and clears the other two. If RR > 0, sets the XG flag and clears the other two.
+
 ¹ = The pushed value is the PC += 4, or the address to the NEXT instruction immediately after the JSR instruction
